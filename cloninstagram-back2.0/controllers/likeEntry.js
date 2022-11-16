@@ -9,19 +9,20 @@ const likePhoto = async (req, res, next) => {
 
     // Recojo los parámetros
     const { id } = req.params;
-    const { vote } = req.body;
+
+    console.log(req);
 
     // Compruebo el usuario no sea el creador de la entrada
     const [current] = await connection.query(
       `
-      SELECT user_id 
+      SELECT user_id
       FROM photo
       WHERE id=?
     `,
       [id]
     );
 
-    if (current[0].user_id === req.userAuth.id) {
+    if (current[0].user_id === req.userId) {
       const error = new Error('No puedes votar tu propio post');
       error.httpStatus = 403;
       throw error;
@@ -31,36 +32,31 @@ const likePhoto = async (req, res, next) => {
     const [existingVote] = await connection.query(
       `
       SELECT id
-      FROM photo_votes
-      WHERE user_id=? AND photo_id=?
+      FROM likes
+      WHERE id_user=? AND id_img=?
     `,
-      [req.userAuth.id, id]
+      [req.userId, id]
     );
 
     if (existingVote.length > 0) {
-      `
-      DELETE INTO likes(date, vote, photo_id, user_id)
-      VALUES(?,?,?,?)
-    `;
+      const error = new Error('Ya votaste este post');
+      error.httpStatus = 403;
+      throw error;
     }
 
     // Añado el voto a la tabla
     await connection.query(
       `
-      INSERT INTO likes(date, vote, photo_id, user_id)
-      VALUES(?,?,?,?)
+      INSERT INTO likes( id_user, id_img)
+      VALUES(?,?)
     `,
-      [vote, id, req.userAuth.id]
+      [req.userId, id]
     );
 
-    // Saco la nueva media de votos (por implementar)
-
-    //   res.send({
-    //     status: 'ok',
-    //     data: {
-    //       likes:
-    //     },
-    //   });
+    res.send({
+      status: 'ok',
+      message: `Post Votado`,
+    });
   } catch (error) {
     next(error);
   } finally {

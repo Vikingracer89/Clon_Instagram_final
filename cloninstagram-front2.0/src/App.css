@@ -187,6 +187,16 @@ form.new-post {
 
 button {
   padding: 0.5rem 1rem;
+  border-radius: 0.3rem;
+  background-color: var(--bg);
+  color: var(--action);
+  border: none;
+  box-shadow: 3px 1.5px 1.5px #515ecf;
+}
+
+.logout {
+  padding: 0.5rem 1rem;
+  border-radius: 0.3rem;
   background-color: var(--action);
   color: var(--bright);
   border: none;

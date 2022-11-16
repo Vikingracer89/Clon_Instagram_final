@@ -21,6 +21,8 @@ const authUser = (req, res, next) => {
     // Metemos la información del token en la request para usarla en el controlador
     req.userId = token.id;
 
+    //console.log('USER ID:', req.userId);
+
     // Saltamos al controlador
     next();
   } catch (error) {

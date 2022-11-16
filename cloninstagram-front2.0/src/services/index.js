@@ -1,5 +1,5 @@
 export const getAllPostsService = async () => {
-  const response = await fetch(`${process.env.REACT_APP_BACKEND}`);
+  const response = await fetch(`${process.env.REACT_APP_BACKEND}/photos`);
 
   const json = await response.json();
 
@@ -11,7 +11,7 @@ export const getAllPostsService = async () => {
 };
 
 export const getSinglePostService = async (id) => {
-  const response = await fetch(`${process.env.REACT_APP_BACKEND}/photo/${id}`);
+  const response = await fetch(`${process.env.REACT_APP_BACKEND}/photos/${id}`);
 
   const json = await response.json();
 
@@ -23,7 +23,7 @@ export const getSinglePostService = async (id) => {
 };
 
 export const signupUserService = async ({ email, password }) => {
-  const response = await fetch(`${process.env.REACT_APP_BACKEND}/singup`, {
+  const response = await fetch(`${process.env.REACT_APP_BACKEND}/signup`, {
     method: "POST",
     body: JSON.stringify({ email, password }),
     headers: {
@@ -39,7 +39,7 @@ export const signupUserService = async ({ email, password }) => {
 };
 
 export const getMyDataService = async (token) => {
-  const response = await fetch(`${process.env.REACT_APP_BACKEND}/user/:id`, {
+  const response = await fetch(`${process.env.REACT_APP_BACKEND}/user`, {
     headers: {
       Authorization: token,
     },
@@ -55,7 +55,7 @@ export const getMyDataService = async (token) => {
 };
 
 export const getUserDataService = async (id) => {
-  const response = await fetch(`${process.env.REACT_APP_BACKEND}/user/:${id}`);
+  const response = await fetch(`${process.env.REACT_APP_BACKEND}/user/${id}`);
 
   const json = await response.json();
 
@@ -68,7 +68,7 @@ export const getUserDataService = async (id) => {
 
 export const getUserPostsService = async (id) => {
   const response = await fetch(
-    `${process.env.REACT_APP_BACKEND}/photos/:${id}`
+    `${process.env.REACT_APP_BACKEND}/photos/user/${id}`
   );
 
   const json = await response.json();
@@ -121,6 +121,25 @@ export const deletePostService = async ({ id, token }) => {
     `${process.env.REACT_APP_BACKEND}/photo/:${id}`,
     {
       method: "DELETE",
+      headers: {
+        Authorization: token,
+      },
+    }
+  );
+
+  const json = await response.json();
+
+  if (!response.ok) {
+    throw new Error(json.message);
+  }
+};
+
+export const likePostService = async ({ data, token, id }) => {
+  const response = await fetch(
+    `${process.env.REACT_APP_BACKEND}/photos/:${id}/like`,
+    {
+      method: "GET",
+      body: data,
       headers: {
         Authorization: token,
       },

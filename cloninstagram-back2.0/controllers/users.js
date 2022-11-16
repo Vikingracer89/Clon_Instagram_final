@@ -30,17 +30,18 @@ const newUserController = async (req, res, next) => {
 
 const getUserController = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const userId = parseInt(id);
+    let id = req.userId;
 
-    const schema = Joi.number().positive().integer().required();
-    const validation = schema.validate(userId);
+    console.log(id);
 
-    if (validation.error) {
-      throw generateError('El usuario debe ser un numero', 401);
+    if (!id) {
+      id = req.params.id;
+      console.log(id);
     }
 
-    const user = await getUserById(userId);
+    const user = await getUserById(id);
+
+    //console.log('USER:', user);
 
     res.send({
       status: 'ok',

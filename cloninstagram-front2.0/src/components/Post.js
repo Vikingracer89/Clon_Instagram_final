@@ -2,8 +2,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { deletePostService } from "../services";
 import { AuthContext } from "../context/AuthContext";
+import { LikeButton } from "./Like";
 
-export const Post = ({ photo, removePhoto }) => {
+export const Post = ({ post, removePost }) => {
   const navigate = useNavigate();
   const { token, user } = useContext(AuthContext);
   const [error, setError] = useState("");
@@ -12,8 +13,8 @@ export const Post = ({ photo, removePhoto }) => {
     try {
       await deletePostService({ id, token });
 
-      if (removePhoto) {
-        removePhoto(id);
+      if (removePost) {
+        removePost(id);
       } else {
         navigate("/");
       }
@@ -24,31 +25,34 @@ export const Post = ({ photo, removePhoto }) => {
 
   return (
     <article className="Photo">
-      <p>{photo.text}</p>
-      {photo.image ? (
-        <img
-          src={`${process.env.REACT_APP_BACKEND}/uploads/${photo.image}`}
-          alt={photo.text}
-        />
-      ) : null}
-      <p>
-        By <Link to={`/user/${photo.user_id}`}>{photo.email}</Link> on{" "}
-        <Link to={`/photo/${photo.id}`}>
-          {new Date(photo.created_at).toLocaleString()}
+      <p>{post.text}</p>
+      {post.image ? (
+        <Link to={`/photo/${post.id}`}>
+          <img
+            src={`${process.env.REACT_APP_BACKEND}/uploads/${post.image}`}
+            alt={post.text}
+          />
         </Link>
-      </p>
-      {user && user.id === photo.user_id ? (
+      ) : null}
+      {user ? (
+        <p>
+          By <Link to={`/user/${post.user_id}`}>{post.email}</Link> on{" "}
+          {new Date(post.created_at).toLocaleString()}
+        </p>
+      ) : null}
+      {user && user.id === post.user_id ? (
         <section>
           <button
             onClick={() => {
               if (
                 window.confirm("¿Estas seguro de que quieres borrar este Post?")
               )
-                deletePhoto(photo.id);
+                deletePhoto(post.id);
             }}
           >
             Borrar Post
           </button>
+          <LikeButton />
           {error ? <p>{error}</p> : null}
         </section>
       ) : null}

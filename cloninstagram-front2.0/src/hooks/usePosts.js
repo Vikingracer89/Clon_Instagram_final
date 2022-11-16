@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { getAllPostsService, getUserPostsService } from "../services";
 
 const usePosts = (id) => {
-  const [post, setPosts] = useState([]);
+  // recibe id usuario
+  const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -14,6 +15,7 @@ const usePosts = (id) => {
           ? await getUserPostsService(id)
           : await getAllPostsService();
 
+        //console.log(data);
         setPosts(data);
       } catch (error) {
         setError(error.message);
@@ -26,14 +28,14 @@ const usePosts = (id) => {
   }, [id]);
 
   const addPost = (data) => {
-    setPosts([data, ...post]);
+    setPosts([data, ...posts]);
   };
 
   const removePost = (id) => {
-    setPosts(post.filter((post) => post.id !== id));
+    setPosts(posts.filter((post) => post.id !== id));
   };
 
-  return { post, error, loading, addPost, removePost };
+  return { posts, error, loading, addPost, removePost };
 };
 
 export default usePosts;

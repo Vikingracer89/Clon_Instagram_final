@@ -13,6 +13,7 @@ const {
 
 const {
   getPhotosController,
+  getPhotosUserController,
   newPhotoController,
   getSinglePhotoController,
   deletePhotoController,
@@ -31,15 +32,20 @@ app.use(cors());
 
 //Rutas de usuario
 app.post('/signup', newUserController);
+app.get('/user', authUser, getUserController);
 app.get('/user/:id', getUserController);
 app.post('/user/login', loginController);
 
 //Rutas de post
 app.post('/photos', authUser, newPhotoController);
 app.get('/photos', getPhotosController);
-app.get('/photos/:id', authUser, getSinglePhotoController);
+app.get('/photos/user/:id', getPhotosUserController);
+app.get('/photos/:id', getSinglePhotoController);
 app.delete('/photos/:id', authUser, deletePhotoController);
+
+//rutas de like
 app.post('/photos/:id/like', authUser, likePhoto);
+app.get('/photos/:id/like', authUser, likePhoto);
 
 // Middleware de 404
 app.use((req, res) => {

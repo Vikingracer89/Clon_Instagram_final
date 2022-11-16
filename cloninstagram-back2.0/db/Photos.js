@@ -73,8 +73,38 @@ const getAllPhotos = async () => {
     connection = await getConnection();
 
     const [result] = await connection.query(`
-      SELECT * FROM photo ORDER BY created_at DESC
+      SELECT photo.id, user_id, text, image, photo.created_at, email
+      FROM photo 
+      LEFT JOIN users on (photo.user_id = users.id)
+      ORDER BY created_at DESC
     `);
+
+    //console.log('getAllPhotos', result);
+
+    return result;
+  } finally {
+    if (connection) connection.release();
+  }
+};
+
+const getAllPhotosUser = async (id) => {
+  let connection;
+
+  try {
+    connection = await getConnection();
+
+    const [result] = await connection.query(
+      `
+      SELECT photo.id, user_id, text, image, photo.created_at, email
+      FROM photo 
+      LEFT JOIN users on (photo.user_id = users.id)
+      WHERE user_id = ? 
+      ORDER BY created_at DESC
+    `,
+      [id]
+    );
+
+    //console.log('getAllPhotosUser', result);
 
     return result;
   } finally {
@@ -105,6 +135,7 @@ const createPhoto = async (userId, text, image = '') => {
 module.exports = {
   createPhoto,
   getAllPhotos,
+  getAllPhotosUser,
   getPhotoById,
   detelePhotoById,
   getPhotoByText,

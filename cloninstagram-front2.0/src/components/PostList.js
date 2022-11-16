@@ -1,12 +1,12 @@
 import { Post } from "./Post";
 
-export const PostList = ({ photos, removePost }) => {
-  return photos.length ? (
+export const PostList = ({ posts, removePost }) => {
+  return posts.length ? (
     <ul className="post-list">
-      {photos.map((photo) => {
+      {posts.map((post) => {
         return (
-          <li key={photo.id}>
-            <Post photo={photo} removePost={removePost} />
+          <li key={post.id}>
+            <Post post={post} removePost={removePost} />
           </li>
         );
       })}

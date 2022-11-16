@@ -38,18 +38,15 @@ async function main() {
     `);
 
     await connection.query(`
-       CREATE TABLE likes (
-         id INT PRIMARY KEY AUTO_INCREMENT,
-         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-         photo_id INT NOT NULL,
-         FOREIGN KEY (photo_id) REFERENCES photo(id),
-         user_id INT NOT NULL,
-         FOREIGN KEY (user_id) REFERENCES users(id)
-         CONSTRAINT uc_user_photo UNIQUE (user_id , photo_id)
-       );
+      CREATE TABLE likes (
+        id INTEGER PRIMARY KEY AUTO_INCREMENT,
+        id_user INTEGER NOT NULL,
+        id_img INTEGER NOT NULL,
+        FOREIGN KEY (id_img) REFERENCES photo(id)
+        );
      `);
   } catch (error) {
-    //console.error(error);
+    console.error(error);
   } finally {
     if (connection) connection.release();
     process.exit();

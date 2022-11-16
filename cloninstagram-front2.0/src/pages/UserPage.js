@@ -14,7 +14,7 @@ export const UserPage = () => {
   return (
     <section>
       <h1>Usuario: {user.email}</h1>
-      <section class="user-data">
+      <section className="user-data">
         <p>ID Usuario: {user.id}</p>
         <p>Usuario desde: {new Date(user.created_at).toLocaleString()}</p>
       </section>

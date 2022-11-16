@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { sendPostService } from "../services";
 
-export const NewPost = ({ addPhoto }) => {
+export const NewPost = ({ addPost }) => {
   const { token } = useContext(AuthContext);
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -16,7 +16,7 @@ export const NewPost = ({ addPhoto }) => {
       const data = new FormData(e.target);
       const photo = await sendPostService({ data, token });
 
-      addPhoto(photo);
+      addPost(photo);
 
       e.target.reset();
       setImage(null);
